@@ -312,15 +312,44 @@ section[id] { scroll-margin-top: 64px; }
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
   background: linear-gradient(90deg, var(--green-sage), var(--amber-light), var(--green-light));
 }
- 
+/* CONTAINER (stable hover area) */
 .avatar-ring {
-  width: 110px; height: 110px; border-radius: 50%; overflow: hidden;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: visible;
+  position: relative;
   box-shadow: 0 6px 18px rgba(45,90,45,0.35);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 1.25rem;
 }
-.avatar-ring img { width: 100%; height: 100%; object-fit: cover; display: block; }
- 
+
+
+
+/* IMAGE */
+.avatar-ring img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 2;
+}
+
+/* 🔥 SMOOTH POP EFFECT */
+.avatar-ring:hover img {
+  transform: scale(1.5);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+}
+
+/* IMPORTANT: allow expansion */
+.profile-card {
+  overflow: visible !important;
+}
 .profile-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 500; color: var(--green-deep); margin-bottom: 0.2rem; }
 .profile-role { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--green-sage); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.75rem; }
  
@@ -559,10 +588,48 @@ footer { background: var(--green-deep); padding: 2.5rem 6rem; display: flex; ali
   .tl-item { grid-template-columns: 1fr; }
   .opento-grid { grid-template-columns: 1fr; }
 }
+
+/* FULL SCREEN BACKGROUND */
+#imagePreview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 9999;
+}
+
+/* IMAGE */
+#imagePreview img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 20px;
+  transform: scale(0.8);
+  transition: transform 0.4s ease;
+}
+
+/* ACTIVE STATE */
+#imagePreview.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#imagePreview.active img {
+  transform: scale(1);
+}
 </style>
 </head>
 <body>
- 
+ <div id="imagePreview">
+  <img src="profile.jpg" alt="Preview">
+</div>
 <nav id="mainNav">
   <a href="#home" class="nav-logo">Garvita <span>Jaiswal</span></a>
   <ul class="nav-links" id="navLinks">
@@ -1224,6 +1291,22 @@ const burger = document.getElementById('navBurger');
 const mobileMenu = document.getElementById('mobileMenu');
 burger.addEventListener('click', () => { burger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
 function closeMobile() { burger.classList.remove('open'); mobileMenu.classList.remove('open'); }
+</script>
+<script>
+const avatarImg = document.querySelector(".avatar-ring img");
+const preview = document.getElementById("imagePreview");
+
+avatarImg.addEventListener("mouseenter", () => {
+  preview.classList.add("active");
+});
+
+avatarImg.addEventListener("mouseleave", () => {
+  preview.classList.remove("active");
+});
+
+preview.addEventListener("click", () => {
+  preview.classList.remove("active");
+});
 </script>
 </body>
 </html>
